@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const dotenv = require('dotenv');
 const { Pool } = require('pg');
 
@@ -42,11 +43,11 @@ const createTables = () => {
 
   pool
     .query(queryText)
-    .then(res => {
+    .then((res) => {
       console.log(res);
       pool.end();
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       pool.end();
     });
@@ -59,11 +60,11 @@ const dropTables = () => {
   const queryText = 'DROP TABLE IF EXISTS employees';
   pool
     .query(queryText)
-    .then(res => {
+    .then((res) => {
       console.log(res);
       pool.end();
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       pool.end();
     });
