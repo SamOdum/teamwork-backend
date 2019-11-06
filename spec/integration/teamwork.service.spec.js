@@ -7,12 +7,12 @@ describe('Teamwork REST API', () => {
 //   const ENV = require('../support/env.json');
 //   const BASE_URL = ENV.integration.teamworkServiceBaseUrl;
 
-  describe('POST /api/v1/auth/create-user', () => {
-    it('should return the summary for the created user', (done) => {
+  describe('GET /', () => {
+    it('should return a string', (done) => {
       frisby
-        .post(`${BASE_URL} /api/v1/auth/create-user`)
+        .get(`${BASE_URL}`)
         .then((response) => {
-          expect(response.status).toBe(201);
+          expect(response.status).toBe(200);
           // //           expect(response.json.items).toContain('message');
           // //           expect(response.json.items).toContain('token');
           // //           expect(response.json.items).toContain('userid');
