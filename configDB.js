@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-const dotenv = require('dotenv');
 const { Pool } = require('pg');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -25,11 +25,9 @@ pool.on('connect', () => {
  * Create Tables
  */
 const createTables = () => {
-  const queryText = `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-  CREATE TABLE IF NOT EXISTS
+  const queryText = `CREATE TABLE IF NOT EXISTS
       employees ( 
-        userId uuid DEFAULT uuid_generate_v4 (), 
+        userid uuid PRIMARY KEY, 
         firstname VARCHAR(255) NOT NULL,
         lastName VARCHAR(225) NOT NULL, 
         email VARCHAR(225) NOT NULL, 
@@ -37,8 +35,7 @@ const createTables = () => {
         gender VARCHAR(225) NOT NULL, 
         jobRole VARCHAR(225) NOT NULL, 
         department VARCHAR(225) NOT NULL, 
-        address VARCHAR(225) NOT NULL,
-        PRIMARY KEY (userId)
+        address VARCHAR(225) NOT NULL
       )`;
 
   pool
