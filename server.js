@@ -12,7 +12,7 @@ App.use(cors());
 App.get('/', (req, res) => {
   res.status(200).json({ info: 'Server up and running smoothly' });
 });
-App.post('/api/v1/auth/create-user', require('./src/controllers/employees').create);
+App.post('/api/v1/auth/create-user', require('./controllers/employees').create);
 
 // **Initialize port & server**
 const PORT = process.env.PORT || 5000;

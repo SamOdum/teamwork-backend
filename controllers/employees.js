@@ -1,6 +1,6 @@
 // import moment from 'moment';
 const uuidv4 = require('uuid/v4');
-const db = require('../../configDB');
+const db = require('../config/configDB');
 
 const Employees = {
   /**
