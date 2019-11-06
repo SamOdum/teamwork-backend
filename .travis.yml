@@ -1,6 +1,15 @@
+services:
+  - postgresql
 language: node_js
 node_js:
-  - 'stable'
+  - 10.14.1
+branches:
+  only:
+    - develop
+install:
+  - npm install
 cache:
   directories:
-    - 'node_modules'
+    - node_modules
+script:
+  - npm test
