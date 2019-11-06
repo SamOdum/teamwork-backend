@@ -1,6 +1,7 @@
 # Teamwork-backend
 
 [![Build Status](https://travis-ci.org/SamOdum/teamwork-backend.svg?branch=develop)](https://travis-ci.org/SamOdum/teamwork-backend)
+[![Coverage Status](https://coveralls.io/repos/github/SamOdum/teamwork-backend/badge.svg?branch=master)](https://coveralls.io/github/SamOdum/teamwork-backend?branch=master)
 
 ## Project Overview
 

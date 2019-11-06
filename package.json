@@ -4,6 +4,7 @@
   "description": "Teamwork is an internal social network for employees of an organization. The goal of this\r application is to facilitate more interaction between colleagues and promote team bonding.",
   "main": "index.js",
   "scripts": {
+    "coverage": "npm run pretest && jest --coverage && cat ./coverage/lcov.info | coveralls",
     "start": "nodemon server.js",
     "test": "node node_modules/jasmine/bin/jasmine.js"
   },
@@ -33,6 +34,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
+    "coveralls": "^3.0.7",
     "nodemon": "^1.19.4"
   }
 }
