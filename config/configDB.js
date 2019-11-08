@@ -129,6 +129,49 @@ const createCommentsTable = () => {
     });
 };
 
+/**
+ * Create ROLES Table
+ */
+const createRolesTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+      roles(
+        roleid SERIAL PRIMARY KEY,
+        rolename VARCHAR(225) NOT NULL
+      )`;
+
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+/**
+ * Create USERROLES Table
+ */
+const createUserRolesTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+      userroles(
+        userid VARCHAR(225) PRIMARY KEY,
+        roleid VARCHAR(225) PRIMARY KEY,
+        FOREIGN KEY (userid) REFERENCES employees(userid) ON DELETE CASCADE,
+        FOREIGN KEY (roleid) REFERENCES roles(roleid) ON DELETE CASCADE
+      )`;
+
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+
 // **DROP TABLES**
 /**
  * Drop EMPLOYEES Table
@@ -193,6 +236,36 @@ const dropCommentsTable = () => {
       pool.end();
     });
 };
+/**
+ * Drop ROLES Table
+ */
+const dropRolesTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS roles returning *';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+/**
+ * Drop USERROLES Table
+ */
+const dropUserRolesTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS userroles returning *';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
 
 pool.on('remove', () => {
   console.log('client removed');
@@ -204,10 +277,14 @@ module.exports = {
   createArticlesTable,
   createGifsTable,
   createCommentsTable,
+  createRolesTable,
+  createUserRolesTable,
   dropEmployeesTable,
   dropArticlesTable,
   dropGifsTable,
   dropCommentsTable,
+  dropRolesTable,
+  dropUserRolesTable,
 };
 
 require('make-runnable');
