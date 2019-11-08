@@ -1,6 +1,6 @@
-// import moment from 'moment';
-const uuidv4 = require('uuid/v4');
-const db = require('../config/configDB');
+// const uuidv4 = require('uuid/v4');
+const bcrypt = require('bcrypt');
+const db = require('../config/dbQuery');
 
 const Employees = {
   /**
@@ -11,15 +11,20 @@ const Employees = {
    */
   async create(req, res) {
     const text = `INSERT INTO
-      employees(userid, firstname, lastname, email, password, gender, jobrole, department, address)
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      employees(firstname, lastname, email, password, gender, jobrole, department, address)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8)
       returning *`;
+
+    // **Encrypt user's password
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(req.body.password, salt);
+
     const values = [
-      uuidv4(),
+      // uuidv4(),
       req.body.firstName,
       req.body.lastName,
       req.body.email,
-      req.body.password,
+      passwordHash,
       req.body.gender,
       req.body.jobRole,
       req.body.department,
@@ -29,16 +34,18 @@ const Employees = {
 
     try {
       const { rows } = await db.query(text, values);
+      const userId = rows[0].userid;
+      console.log(userId);
       return res.status(201).json({
         status: 'success',
         data: {
           message: 'User account successfully created',
           // token,
-          userId: db.query(`SELECT id FROM ${rows}[0]`),
+          userId,
         },
       });
     } catch (error) {
-      return res.status(400).send({ message: error });
+      return res.status(400).send({ status: 'error', error });
     }
   },
 };

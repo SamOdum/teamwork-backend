@@ -28,7 +28,7 @@ pool.on('connect', () => {
 const createEmployeesTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
       employees ( 
-        userid uuid PRIMARY KEY, 
+        userid SERIAL PRIMARY KEY, 
         firstname VARCHAR(255) NOT NULL,
         lastName VARCHAR(225) NOT NULL, 
         email VARCHAR(225) UNIQUE NOT NULL, 
@@ -57,7 +57,7 @@ const createEmployeesTable = () => {
 const createArticlesTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
       articles(
-        articleid UUID PRIMARY KEY,
+        articleid SERIAL PRIMARY KEY,
         title VARCHAR(225) UNIQUE NOT NULL,
         article TEXT NOT NULL,
         createdon TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -82,7 +82,7 @@ const createArticlesTable = () => {
 const createGifsTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
       gifs(
-        gifid UUID PRIMARY KEY,
+        gifid SERIAL PRIMARY KEY,
         imageurl TEXT NOT NULL,
         title VARCHAR(225) NOT NULL,
         createdon TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -107,7 +107,7 @@ const createGifsTable = () => {
 const createCommentsTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
       comments(
-        commentid UUID PRIMARY KEY,
+        commentid SERIAL PRIMARY KEY,
         comment TEXT NOT NULL,
         createdon TIMESTAMP NOT NULL DEFAULT NOW(),
         userid VARCHAR(225) NOT NULL,
