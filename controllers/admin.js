@@ -44,19 +44,17 @@ const Admin = {
    * @returns {object} user object
    */
   async login(req, res) {
-    if (!req.body.email || !req.body.password) {
+    const { email, password } = req.body;
+    if (!email || !password || (!Helper.isValidEmail(email))) {
       return res.status(400).send({ status: 'error', message: 'Some values are missing' });
-    }
-    if (!Helper.isValidEmail(req.body.email)) {
-      return res.status(400).send({ status: 'error', message: 'Please enter a valid email address' });
     }
     const text = 'SELECT e.userid, e.firstname, e.email, e.password, u.roleid, r.rolename FROM roles r,employees e, userroles u WHERE r.roleid = u.roleid AND e.userid = u.userid AND e.email = $1';
     try {
-      const { rows } = await db.query(text, [req.body.email]);
+      const { rows } = await db.query(text, [email]);
       if (!rows[0]) {
         return res.status(400).send({ status: 'error', message: 'The credentials you provided is incorrect' });
       }
-      if (!Helper.comparePassword(rows[0].password, req.body.password)) {
+      if (!Helper.comparePassword(rows[0].password, password)) {
         return res.status(400).send({ status: 'error', message: 'The credentials you provided is incorrect' });
       }
       const token = Helper.generateToken(rows[0].id);

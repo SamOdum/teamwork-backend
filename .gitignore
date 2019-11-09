@@ -62,3 +62,5 @@ typings/
 
 # miscellenous
 storeRoom.js
+init.pgsql
+init.sql

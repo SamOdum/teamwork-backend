@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const db = require('../config/dbQuery');
 
@@ -27,7 +28,7 @@ const Helper = {
    * @returns {Boolean} True or False
    */
   isValidEmail(email) {
-    return /\S+@\S+\.\S+/.test(email);
+    return validator.isEmail(email);
   },
   /**
    * Gnerate Token
