@@ -58,7 +58,7 @@ const Auth = {
     }
     try {
       const decoded = await jwt.verify(token, process.env.SECRET);
-      const text = 'SELECT * FROM users WHERE id = $1';
+      const text = 'SELECT * FROM employees WHERE id = $1';
       const { rows } = await db.query(text, [decoded.userId]);
       if (!rows[0]) {
         return res.status(400).send({ status: 'error', error: 'Invalid token provided' });
