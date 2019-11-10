@@ -1,5 +1,7 @@
 const { Router } = require('express');
-const employees = require('../../controllers/employees');
+const gifs = require('../../controllers/gifs');
+const articles = require('../../controllers/articles');
+const { Auth, Helper } = require('../../middleware/Auth');
 
 
 // Importing endpoints to application resources
@@ -8,7 +10,10 @@ const authRoute = require('./authRoute');
 const router = new Router();
 
 // Regular Endpoints
-router.post('/create-user', employees.create);
+router.post('/gifs', gifs.create);
+router.post('/articles', articles.create);
+router.patch('/articles/:articleId', articles.update);
+router.delete('/articles/:articleId', articles.delete);
 
 // Login/Register Router
 router.use('/auth', authRoute);

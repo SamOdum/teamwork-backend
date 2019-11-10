@@ -32,6 +32,25 @@ const Employees = {
   },
 
   /**
+   * Delete An Employee
+   * @param {object} req
+   * @param {object} res
+   * @returns {void} return status code 204
+   */
+  async delete(req, res) {
+    const deleteQuery = 'DELETE FROM users WHERE id=$1 returning *';
+    try {
+      const { rows } = await db.query(deleteQuery, [req.body.userId]);
+      if (!rows[0]) {
+        return res.status(404).send({ status: 'error', message: 'Employee record not found' });
+      }
+      return res.status(204).send({ status: 'error', message: 'Employee record deleted' });
+    } catch (error) {
+      return res.status(400).send({ statue: 'error', error });
+    }
+  },
+
+  /**
    * Login An Employee
    * @param {object} req
    * @param {object} res

@@ -53,9 +53,9 @@ const Auth = {
    * @returns {object|void} response object
    */
   async verifyToken(req, res, next) {
-    const token = req.headers['x-access-token'];
+    const token = req.headers['x-auth-token'];
     if (!token) {
-      return res.status(400).send({ status: 'error', erroe: 'No token provided' });
+      return res.status(400).send({ status: 'error', error: 'No token provided' });
     }
     try {
       const decoded = await jwt.verify(token, process.env.SECRET);
@@ -67,7 +67,7 @@ const Auth = {
       req.user = { id: decoded.userId };
       next();
     } catch (error) {
-      return res.status(400).send({ status: 'error', error: 'error' });
+      return res.status(400).send({ status: 'error', error });
     }
     return true; // **  <= Be wary of this line here
   },

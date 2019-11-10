@@ -1,6 +1,6 @@
 const db = require('../config/dbQuery');
 
-const userRoles = {
+const Gifs = {
   /**
    * Create userRoles
    * @param {object} req
@@ -8,14 +8,11 @@ const userRoles = {
    * @returns {object} employee object
    */
   async create(req, res) {
-    const text = `INSERT INTO
-      userroles(userid, roleid)
-      VALUES($1, $2)
-      returning *`;
+    const text = 'INSERT INTO gifs("gifId", "imageUrl", title, "createdOn", "userId") VALUES (?, ?) returning *';
 
     const values = [
-      req.body.userId,
-      req.body.roleId,
+      req.body.imageUrl,
+      req.body.title,
     ];
 
     try {
@@ -33,4 +30,4 @@ const userRoles = {
   },
 };
 
-module.exports = userRoles;
+module.exports = Gifs;
