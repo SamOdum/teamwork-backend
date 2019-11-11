@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const dotenv = require('dotenv');
 const db = require('../config/dbQuery');
-const { Helper } = require('../middleware/Auth');
+// const { Helper } = require('../middleware/Auth');
 
 dotenv.config();
 
@@ -21,6 +21,8 @@ const Articles = {
   /**
  *
  * Create Helper Functions
+ * @param {object} res
+ * @returns {object} article object
  */
 
   getUserId(req) {
@@ -61,9 +63,9 @@ const Articles = {
    */
   async update(req, res) {
     const userId = Articles.getUserId(req);
-
+    const { articleId } = req.params;
     try {
-      const { rows } = await db.query(Articles.query.findOneArticle, [req.params.articleId, userId]);
+      const { rows } = await db.query(Articles.query.findOneArticle, [articleId, userId]);
       if (!rows[0]) {
         return res.status(404).send({ status: 'error', message: 'Article not found' });
       }
