@@ -1,15 +1,14 @@
 const jwt = require('jsonwebtoken');
-
 const dotenv = require('dotenv');
 const db = require('../config/dbQuery');
-// const { Helper } = require('../middleware/Auth');
 
 dotenv.config();
 
 const Articles = {
   /**
      *
-     * Queries Strings
+ * Create PostgreSQL Queries
+     *
      */
   query: {
     createArticle: 'INSERT INTO articles(title, article, userid) VALUES ($1, $2, $3) returning *',
@@ -48,6 +47,35 @@ const Articles = {
         status: 'success',
         data: {
           message: 'Article successfully posted', articleId: articleid, createdOn: createdon, title,
+        },
+      });
+    } catch (error) {
+      return res.status(400).send({ status: 'error', error });
+    }
+  },
+
+  /**
+   * Get One Article
+   * @param {object} req
+   * @param {object} res
+   * @returns {void} return status code 200
+   */
+  async getOneArticle(req, res) {
+    const userId = Articles.getUserId(req);
+    const { articleId } = req.params;
+    const findOneQuery = Articles.query.findOneArticle;
+    try {
+      const { rows } = await db.query(findOneQuery, [articleId, userId]);
+      const {
+        articleid, createdon, title, article, comments,
+      } = rows[0];
+      if (!rows[0]) {
+        return res.status(404).send({ status: 'error', message: 'Gif not found' });
+      }
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          id: articleid, createdOn: createdon, title, article, comments,
         },
       });
     } catch (error) {

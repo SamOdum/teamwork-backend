@@ -1,4 +1,4 @@
-
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const cloudinary = require('cloudinary').v2;
 const db = require('../config/dbQuery');
@@ -10,27 +10,44 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 const Gifs = {
+  /**
+ *
+ * Create PostgreSQL Queries
+ *
+ */
   query: {
-    createGif: 'INSERT INTO gifs(imageurl, title, userid) VALUES ($1, $2, $3) returning *',
-    findOneArticle: 'SELECT * FROM articles WHERE articleid=$1 AND userid = $2',
+    createGif: 'INSERT INTO gifs(imageurl, title, publicid, userid) VALUES ($1, $2, $3, $4) returning *',
+    findGif: 'SELECT * FROM gifs WHERE gifid=$1 AND userid = $2',
     updateOneArticle: 'UPDATE articles SET title=$1, article=$2 WHERE articleid=$3 AND userid = $4 returning *',
-    deleteOneArticle: 'DELETE FROM articles WHERE articleid=$1 AND userid = $2 returning *',
+    deleteGif: 'DELETE FROM gifs WHERE gifid=$1 AND userid = $2 returning *',
   },
-  cloudinary: {
-    upload(file) { cloudinary.uploader.upload(file); },
-    delete(fileID) { cloudinary.uploader.destroy(fileID); },
+
+  /**
+ *
+ * Create Helper Functions
+ * @param {object} res
+ * @returns {object} article object
+ */
+  getUserId(req) {
+    const token = req.headers['x-auth-token'];
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const id = decoded.userId;
+    return id;
   },
 
   create(req, res) {
     const file = req.files[0].path;
-    const { title, userId } = req.body;
+    const userId = Gifs.getUserId(req);
+    const { title } = req.body;
+
     // **Upload file to Cloudinary
 
     cloudinary.uploader.upload(file,
+      { folder: 'teamwork/gifs' },
       async (error, result) => {
-        console.log(error, result);
         const { url } = result;
-        const values = [title, url, userId];
+        const publicid = result.public_id;
+        const values = [url, title, publicid, userId];
         try {
           const { rows } = await db.query(Gifs.query.createGif, values);
           const {
@@ -43,67 +60,70 @@ const Gifs = {
               message: 'GIF image successfully created',
               createdOn: createdon,
               title,
-              url,
+              imageUrl: url,
             },
           });
         } catch (err) {
           return res.status(400).send({ status: 'error', err });
         }
       });
-
-    // cloudinary.upload(file)
-    //   .then((image) => {
-    //     const imageDetails = [
-    //       image.url,
-    //       image.public_id,
-    //     ];
-    //     db.query(`INSERT INTO feeds (
-    //           Title, Content, UserID, Type
-    //       ) VALUES ($1, $2, $3, 'gif') RETURNING *;`, [title, imageDetails, userID])
-    //       .then((result) => res.status(201).json({
-    //         status: 'success',
-    //         data: {
-    //           gifId: result.rows[0].id,
-    //           cloudId: result.rows[0].content[1],
-    //           message: 'GIF image successfully posted',
-    //           createdOn: result.rows[0].createdon,
-    //           title: result.rows[0].title,
-    //           imageUrl: result.rows[0].content[0],
-    //         },
-    //       }))
-    //       .catch((err) => res.status(400).json({ error: `unable to connect to database, ${err}` }));
-    //   }).catch((err) => res.status(400).json({ error: `Unable to connect to cloud storage, ${err}` }));
   },
 
-  getOneGif(req, res) {
-    const { id } = req.params;
-    db.query(
-      `SELECT DISTINCT id, title, content, type, createdOn
-      FROM feeds WHERE (id=$1 AND type='gif');`, [id],
-    )
-      .then((content) => {
-        db.query(`SELECT id, comment, contentID, userID, createdOn from comments
-      WHERE contentID = $1`, [content.rows[0].id])
-          .then((comments) => res.status(200).json({
-            status: 'success',
-            data: {
-              content: content.rows[0],
-              comments: comments.rows,
-            },
-          }));
-      })
-      .catch((error) => res.status(404).json({ error: `Unable to view gif with id: ${id}, ${error}` }));
+  /**
+   * Get One Gif
+   * @param {object} req
+   * @param {object} res
+   * @returns {void} return status code 200
+   */
+  async getOneGif(req, res) {
+    const userId = Gifs.getUserId(req);
+    const { gifId } = req.params;
+    const findOneQuery = Gifs.query.findGif;
+    try {
+      const { rows } = await db.query(findOneQuery, [gifId, userId]);
+      const {
+        gifid, createdon, title, imageurl, comments,
+      } = rows[0];
+      if (!rows[0]) {
+        return res.status(404).send({ status: 'error', message: 'Gif not found' });
+      }
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          id: gifid, createdOn: createdon, title, url: imageurl, comments,
+        },
+      });
+    } catch (error) {
+      return res.status(400).send({ status: 'error', error });
+    }
   },
 
-  deleteGif(req, res) {
-    const gifId = req.params.id;
-    const publicID = req.body.cloudId;
-    cloudinary.delete(publicID)
-      .then(() => db.query("DELETE FROM feeds WHERE (id=$1 AND type='gif')", [gifId])
-        .then(() => res.status(200).json({ message: 'GIF was successfully deleted' })))
-      .catch((err) => res.status(400).json({ error: err }));
+  /**
+   * Delete A Gif
+   * @param {object} req
+   * @param {object} res
+   * @returns {void} return status code 202
+   */
+  async delete(req, res) {
+    const userId = Gifs.getUserId(req);
+    const { gifId } = req.params;
+    const findQuery = Gifs.query.findGif;
+    const deleteQuery = Gifs.query.deleteGif;
+    try {
+      const { rows } = await db.query(findQuery, [gifId, userId]);
+      if (!rows[0]) {
+        return res.status(404).send({ status: 'error', message: 'Gif not found' });
+      }
+      cloudinary.uploader.destroy(rows[0].publicid);
+      const response = await db.query(deleteQuery, [gifId, userId]);
+      if (!response.rows[0]) {
+        return res.status(404).json({ status: 'error', message: 'Gif not found' });
+      }
+      return res.status(202).json({ status: 'success', data: { message: 'Gif post successfully deleted' } });
+    } catch (error) {
+      return res.status(400).send({ status: 'error', error });
+    }
   },
-
 };
 
 

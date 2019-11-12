@@ -12,7 +12,10 @@ const router = new Router();
 
 // Regular Endpoints
 router.post('/gifs', Multer.any(), gifs.create);
+router.get('/gifs/:gifId', gifs.getOneGif);
+router.delete('/gifs/:gifId', gifs.delete);
 router.post('/articles', articles.create);
+router.get('/articles/:articleId', articles.getOneArticle);
 router.patch('/articles/:articleId', articles.update);
 router.delete('/articles/:articleId', articles.delete);
 
