@@ -4,47 +4,43 @@ const db = require('../config/dbQuery');
 
 dotenv.config();
 
-const Articles = {
+const Feeds = {
   /**
      *
- * Create PostgreSQL Queries
+ * Create PostgreSQL Query
      *
      */
   query: {
-    createArticlesAndGifs: 'SELECT * FROM articles, gifs',
+    getArticlesAndGifs: 'SELECT * FROM articles UNION ALL SELECT * FROM gifs ORDER BY createdon DESC',
   },
 
   /**
- *
- * Create Helper Functions
- * @param {object} res
- * @returns {object} article object
- */
-
-  getUserId(req) {
-    const token = req.headers['x-auth-token'];
-    const decoded = jwt.verify(token, process.env.SECRET);
-    const id = decoded.userId;
-    return id;
-  },
-
-  /**
-   * Create An Article
+   * Get All Articles & Gifs
    * @param {object} req
    * @param {object} res
    * @returns {object} article object
    */
-  async create(req, res) {
-    const userId = Articles.getUserId(req);
-    const values = [req.body.title, req.body.article, userId];
+  async getAll(req, res) {
+    const getFeeds = Feeds.query.getArticlesAndGifs;
     try {
-      const { rows } = await db.query(Articles.query.createArticle, values);
-      const { articleid, createdon, title } = rows[0];
-      return res.status(201).json({
+      const { rows } = await db.query(getFeeds);
+
+      if (!rows) {
+        return res.status(404).send({ status: 'error', message: 'Gif not found' });
+      }
+      return res.status(200).json({
         status: 'success',
-        data: {
-          message: 'Article successfully posted', articleId: articleid, createdOn: createdon, title,
-        },
+        data: [
+          {
+            id: rows[0].articleid, createdOn: rows[0].createdon, title: rows[0].title, 'article/url': rows[0].article, authorId: rows[0].userid,
+          },
+          {
+            id: rows[1].articleid, createdOn: rows[1].createdon, title: rows[1].title, 'article/url': rows[1].article, authorId: rows[1].userid,
+          },
+          {
+            id: rows[2].articleid, createdOn: rows[2].createdon, title: rows[2].title, 'article/url': rows[2].article, authorId: rows[2].userid,
+          },
+        ],
       });
     } catch (error) {
       return res.status(400).send({ status: 'error', error });
@@ -52,3 +48,4 @@ const Articles = {
   },
 };
 
+module.exports = Feeds;

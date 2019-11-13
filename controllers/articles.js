@@ -20,8 +20,8 @@ const Articles = {
   /**
  *
  * Create Helper Functions
- * @param {object} res
- * @returns {object} article object
+ * @param {object} req
+ * @returns {string} userId
  */
 
   getUserId(req) {
@@ -62,10 +62,9 @@ const Articles = {
    */
   async getOneArticle(req, res) {
     const userId = Articles.getUserId(req);
-    const { articleId } = req.params;
     const findOneQuery = Articles.query.findOneArticle;
     try {
-      const { rows } = await db.query(findOneQuery, [articleId, userId]);
+      const { rows } = await db.query(findOneQuery, [req.params.articleId, userId]);
       const {
         articleid, createdon, title, article, comments,
       } = rows[0];

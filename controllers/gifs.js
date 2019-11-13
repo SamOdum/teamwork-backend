@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const cloudinary = require('cloudinary').v2;
 const db = require('../config/dbQuery');
+const Articles = require('./articles');
 
 dotenv.config();
 cloudinary.config({
@@ -16,7 +17,7 @@ const Gifs = {
  *
  */
   query: {
-    createGif: 'INSERT INTO gifs(imageurl, title, publicid, userid) VALUES ($1, $2, $3, $4) returning *',
+    createGif: 'INSERT INTO gifs(title, imageurl, publicid, userid) VALUES ($1, $2, $3, $4) returning *',
     findGif: 'SELECT * FROM gifs WHERE gifid=$1 AND userid = $2',
     updateOneArticle: 'UPDATE articles SET title=$1, article=$2 WHERE articleid=$3 AND userid = $4 returning *',
     deleteGif: 'DELETE FROM gifs WHERE gifid=$1 AND userid = $2 returning *',
@@ -28,16 +29,17 @@ const Gifs = {
  * @param {object} res
  * @returns {object} article object
  */
-  getUserId(req) {
-    const token = req.headers['x-auth-token'];
-    const decoded = jwt.verify(token, process.env.SECRET);
-    const id = decoded.userId;
-    return id;
-  },
 
+
+  /**
+   * Create One Gif
+   * @param {object} req
+   * @param {object} res
+   * @returns {void} return status code 200
+   */
   create(req, res) {
     const file = req.files[0].path;
-    const userId = Gifs.getUserId(req);
+    const userId = Articles.getUserId(req);
     const { title } = req.body;
 
     // **Upload file to Cloudinary
@@ -46,19 +48,16 @@ const Gifs = {
       { folder: 'teamwork/gifs' },
       async (error, result) => {
         const { url } = result;
-        const publicid = result.public_id;
-        const values = [url, title, publicid, userId];
+        const values = [title, url, result.public_id, userId];
         try {
           const { rows } = await db.query(Gifs.query.createGif, values);
-          const {
-            gifid, createdon,
-          } = rows[0];
+
           return res.status(201).json({
             status: 'success',
             data: {
-              gifId: gifid,
+              gifId: rows[0].gifid,
               message: 'GIF image successfully created',
-              createdOn: createdon,
+              createdOn: rows[0].createdon,
               title,
               imageUrl: url,
             },
@@ -73,14 +72,12 @@ const Gifs = {
    * Get One Gif
    * @param {object} req
    * @param {object} res
-   * @returns {void} return status code 200
+   * @returns {json} return record
    */
   async getOneGif(req, res) {
-    const userId = Gifs.getUserId(req);
-    const { gifId } = req.params;
-    const findOneQuery = Gifs.query.findGif;
+    const userId = Articles.getUserId(req);
     try {
-      const { rows } = await db.query(findOneQuery, [gifId, userId]);
+      const { rows } = await db.query(Gifs.query.findGif, [req.params.gifId, userId]);
       const {
         gifid, createdon, title, imageurl, comments,
       } = rows[0];
@@ -105,7 +102,7 @@ const Gifs = {
    * @returns {void} return status code 202
    */
   async delete(req, res) {
-    const userId = Gifs.getUserId(req);
+    const userId = Articles.getUserId(req);
     const { gifId } = req.params;
     const findQuery = Gifs.query.findGif;
     const deleteQuery = Gifs.query.deleteGif;
