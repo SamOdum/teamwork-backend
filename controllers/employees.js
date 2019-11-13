@@ -70,7 +70,7 @@ const Employees = {
       if (!Helper.comparePassword(rows[0].password, password)) {
         return res.status(400).send({ status: 'error', message: 'The credentials you provided is incorrect' });
       }
-      const token = Helper.generateToken(rows[0].id);
+      const token = Helper.generateToken(rows[0].userid);
       return res.status(200).send({ status: 'success', data: { token, userId: rows[0].userid } });
     } catch (error) {
       return res.status(400).send({ status: 'error', error });

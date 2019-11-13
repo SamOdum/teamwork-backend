@@ -18,6 +18,7 @@ const Gifs = {
   query: {
     createGif: 'INSERT INTO gifs(title, imageurl, publicid, userid) VALUES ($1, $2, $3, $4) returning *',
     findGif: 'SELECT * FROM gifs WHERE gifid=$1 AND userid = $2',
+    getGifComments: 'SELECT commentid AS "commentId", comment, userid AS "authorId" FROM comments WHERE gifid=$1',
     updateOneArticle: 'UPDATE articles SET title=$1, article=$2 WHERE articleid=$3 AND userid = $4 returning *',
     deleteGif: 'DELETE FROM gifs WHERE gifid=$1 AND userid = $2 returning *',
   },
@@ -75,18 +76,22 @@ const Gifs = {
    */
   async getOneGif(req, res) {
     const userId = Articles.getUserId(req);
+    const findComments = Gifs.query.getGifComments;
+
     try {
       const { rows } = await db.query(Gifs.query.findGif, [req.params.gifId, userId]);
       const {
-        gifid, createdon, title, imageurl, comments,
+        gifid, createdon, title, imageurl,
       } = rows[0];
       if (!rows[0]) {
         return res.status(404).send({ status: 'error', message: 'Gif not found' });
       }
+      const response = await db.query(findComments, [req.params.gifId]);
+      const gifComments = response.rows;
       return res.status(200).json({
         status: 'success',
         data: {
-          id: gifid, createdOn: createdon, title, url: imageurl, comments,
+          id: gifid, createdOn: createdon, title, url: imageurl, comments: gifComments,
         },
       });
     } catch (error) {

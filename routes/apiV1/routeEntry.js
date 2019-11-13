@@ -2,7 +2,8 @@ const { Router } = require('express');
 const gifs = require('../../controllers/gifs');
 const feed = require('../../controllers/feed');
 const articles = require('../../controllers/articles');
-const { Auth, Helper } = require('../../middleware/Auth');
+const comments = require('../../controllers/comments');
+// const { Auth, Helper } = require('../../middleware/Auth');
 const Multer = require('../../middleware/Multer');
 
 
@@ -20,6 +21,8 @@ router.get('/articles/:articleId', articles.getOneArticle);
 router.patch('/articles/:articleId', articles.update);
 router.delete('/articles/:articleId', articles.delete);
 router.get('/feed', feed.getAll);
+router.post('/articles/:articleId/comment', comments.createArticleComment);
+router.post('/gifs/:gifId/comment', comments.createGifComment);
 
 // Login/Register Router
 router.use('/auth', authRoute);

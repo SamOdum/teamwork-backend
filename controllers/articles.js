@@ -13,6 +13,7 @@ const Articles = {
   query: {
     createArticle: 'INSERT INTO articles(title, article, userid) VALUES ($1, $2, $3) returning *',
     findOneArticle: 'SELECT * FROM articles WHERE articleid=$1 AND userid = $2',
+    getArticleComments: 'SELECT commentid AS "commentId", comment, userid AS "authorId" FROM comments WHERE articleid=$1',
     updateOneArticle: 'UPDATE articles SET title=$1, article=$2 WHERE articleid=$3 AND userid = $4 returning *',
     deleteOneArticle: 'DELETE FROM articles WHERE articleid=$1 AND userid = $2 returning *',
   },
@@ -63,18 +64,22 @@ const Articles = {
   async getOneArticle(req, res) {
     const userId = Articles.getUserId(req);
     const findOneQuery = Articles.query.findOneArticle;
+    const findComments = Articles.query.getArticleComments;
+
     try {
       const { rows } = await db.query(findOneQuery, [req.params.articleId, userId]);
       const {
-        articleid, createdon, title, article, comments,
+        articleid, createdon, title, article,
       } = rows[0];
       if (!rows[0]) {
-        return res.status(404).send({ status: 'error', message: 'Gif not found' });
+        return res.status(404).send({ status: 'error', message: 'Article not found' });
       }
+      const response = await db.query(findComments, [req.params.articleId]);
+      const articleComments = response.rows;
       return res.status(200).json({
         status: 'success',
         data: {
-          id: articleid, createdOn: createdon, title, article, comments,
+          id: articleid, createdOn: createdon, title, article, comments: articleComments,
         },
       });
     } catch (error) {
