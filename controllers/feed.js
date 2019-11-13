@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const db = require('../config/dbQuery');
 
@@ -15,6 +14,17 @@ const Feeds = {
   },
 
   /**
+   * Create Helper Function
+   * @param {object} row
+   * @param {number} x
+   * @returns {object} feed object
+   */
+  layout(rows, x) {
+    return {
+      id: rows[x].articleid, createdOn: rows[x].createdon, title: rows[x].title, 'article/url': rows[x].article, authorId: rows[x].userid,
+    };
+  },
+  /**
    * Get All Articles & Gifs
    * @param {object} req
    * @param {object} res
@@ -24,22 +34,15 @@ const Feeds = {
     const getFeeds = Feeds.query.getArticlesAndGifs;
     try {
       const { rows } = await db.query(getFeeds);
-
       if (!rows) {
         return res.status(404).send({ status: 'error', message: 'Gif not found' });
       }
       return res.status(200).json({
         status: 'success',
         data: [
-          {
-            id: rows[0].articleid, createdOn: rows[0].createdon, title: rows[0].title, 'article/url': rows[0].article, authorId: rows[0].userid,
-          },
-          {
-            id: rows[1].articleid, createdOn: rows[1].createdon, title: rows[1].title, 'article/url': rows[1].article, authorId: rows[1].userid,
-          },
-          {
-            id: rows[2].articleid, createdOn: rows[2].createdon, title: rows[2].title, 'article/url': rows[2].article, authorId: rows[2].userid,
-          },
+          Feeds.layout(rows, 0),
+          Feeds.layout(rows, 1),
+          Feeds.layout(rows, 2),
         ],
       });
     } catch (error) {

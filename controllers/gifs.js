@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const cloudinary = require('cloudinary').v2;
 const db = require('../config/dbQuery');

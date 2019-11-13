@@ -20,7 +20,7 @@ const Helper = {
    * @returns {Boolean} return True or False
    */
   comparePassword(hashPassword, password) {
-    return bcrypt.compare(password, hashPassword);
+    return bcrypt.compareSync(password, hashPassword);
   },
   /**
    * isValidEmail helper method

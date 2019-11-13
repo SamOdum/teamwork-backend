@@ -59,7 +59,7 @@ const Employees = {
   async signin(req, res) {
     const { email, password } = req.body;
     if (!email || !password || (!Helper.isValidEmail(email))) {
-      return res.status(400).send({ status: 'error', message: 'Fill all fields and rovide a valid email' });
+      return res.status(400).send({ status: 'error', message: 'Fill all fields and provide a valid email' });
     }
     const text = 'SELECT * FROM employees WHERE email = $1';
     try {
@@ -71,7 +71,7 @@ const Employees = {
         return res.status(400).send({ status: 'error', message: 'The credentials you provided is incorrect' });
       }
       const token = Helper.generateToken(rows[0].id);
-      return res.status(200).send({ status: 'success', token, userId: rows[0].userid });
+      return res.status(200).send({ status: 'success', data: { token, userId: rows[0].userid } });
     } catch (error) {
       return res.status(400).send({ status: 'error', error });
     }
