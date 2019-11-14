@@ -10,7 +10,7 @@ App.use(cors());
 
 // **Routes**
 App.get('/', (req, res) => {
-  res.status(200).json({ info: 'Server up and running smoothly' });
+  res.status(200).json({ status: 'success', data: { info: 'Server up and running smoothly' } });
 });
 App.use('/api', require('./routes/routes'));
 // App.post('/api/v1/auth/create-user', require('./controllers/employees').create);
