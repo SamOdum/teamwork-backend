@@ -100,14 +100,14 @@ describe('Teamwork REST API', () => {
       frisby.post(`${BASE_URL}/api/v1/auth/create-user`, {
         headers: jsonHeader,
         body: {
-          firstName: 'Bruce',
-          lastName: 'Almighty',
-          email: 'bruce@yahoo.com',
+          firstName: 'Ben',
+          lastName: 'Bruce',
+          email: 'bbruce@yahoo.com',
           password: 'jbruce',
           gender: 'male',
-          jobRole: 'Salesman',
+          jobRole: 'Driver',
           department: 'Sales & Marketing',
-          address: '12 Exim Street, Portharcourt',
+          address: '14 Maryland Street, Enugu',
           // role: 'Admin',
         },
       })
@@ -122,30 +122,30 @@ describe('Teamwork REST API', () => {
     });
   });
 
-  describe('POST auth/create-user', () => {
-    it('returns a status of 201 and a json response object', () => {
-      frisby.post(`${BASE_URL}/api/v1/auth/create-user`, {
-        headers: jsonHeader,
-        body: {
-          firstName: 'Joe',
-          lastName: 'Cardinal',
-          email: 'cinal@gmail.com',
-          password: 'jayjay',
-          gender: 'male',
-          jobRole: 'Ceo',
-          department: 'Administration',
-          address: '142 Aba Road, Portharcourt',
-          role: 'Admin',
-        },
-      })
-        .expect('status', 201)
-        .expect('json', 'status', 'success')
-        .expect('json', 'status', 'data')
-        .expect('jsonTypes', 'data.*', { // Assert *each* object in 'items' array
-          message: Joi.string().uri().required(),
-          token: Joi.string().required(),
-          userId: Joi.string().required(),
-        });
-    });
-  });
+  // describe('POST auth/create-user', () => {
+  //   it('returns a status of 201 and a json response object', () => {
+  //     frisby.post(`${BASE_URL}/api/v1/auth/create-user`, {
+  //       headers: jsonHeader,
+  //       body: {
+  //         firstName: 'Joe',
+  //         lastName: 'Cardinal',
+  //         email: 'cinal@gmail.com',
+  //         password: 'jayjay',
+  //         gender: 'male',
+  //         jobRole: 'Ceo',
+  //         department: 'Administration',
+  //         address: '142 Aba Road, Portharcourt',
+  //         role: 'Admin',
+  //       },
+  //     })
+  //       .expect('status', 201)
+  //       .expect('json', 'status', 'success')
+  //       .expect('json', 'status', 'data')
+  //       .expect('jsonTypes', 'data.*', { // Assert *each* object in 'items' array
+  //         message: Joi.string().uri().required(),
+  //         token: Joi.string().required(),
+  //         userId: Joi.string().required(),
+  //       });
+  //   });
+  // });
 });
