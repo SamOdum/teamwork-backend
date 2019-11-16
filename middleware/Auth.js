@@ -59,12 +59,28 @@ const Auth = {
     }
     try {
       const decoded = await jwt.verify(token, process.env.SECRET);
-      const text = 'SELECT * FROM employees WHERE id = $1';
+      const text = 'SELECT * FROM employees WHERE userid = $1';
       const { rows } = await db.query(text, [decoded.userId]);
       if (!rows[0]) {
         return res.status(400).send({ status: 'error', error: 'Invalid token provided' });
       }
       req.user = { id: decoded.userId };
+      next();
+    } catch (error) {
+      return res.status(400).send({ status: 'error', error });
+    }
+    return true; // **  <= Be wary of this line here
+  },
+
+  async isAdmin(req, res, next) {
+    const token = req.headers['x-auth-token'];
+    try {
+      const decoded = await jwt.verify(token, process.env.SECRET);
+      const text = 'SELECT * FROM employees WHERE userid = $1';
+      const { rows } = await db.query(text, [decoded.userId]);
+      if (rows[0].role !== 'admin') {
+        return res.status(401).send({ status: 'error', error: 'Not authorized to access resource' });
+      }
       next();
     } catch (error) {
       return res.status(400).send({ status: 'error', error });

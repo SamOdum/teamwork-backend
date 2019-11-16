@@ -1,14 +1,14 @@
 const { Router } = require('express');
-// const { Auth, Helper } = require('../../middleware/Auth');
+const { Auth } = require('../../middleware/Auth');
 const employees = require('../../controllers/employees');
 const roles = require('../../controllers/roles');
 const userRoles = require('../../controllers/gifs');
 
 const router = new Router();
 
-router.post('/create-user', employees.create);
-router.post('/sign-in', employees.signin);
-router.post('/create-roles', roles.create);
-router.post('/create-userroles', userRoles.create);
+router.post('/create-user', Auth.verifyToken, Auth.isAdmin, employees.create);
+router.post('/sign-in', Auth.verifyToken, employees.signin);
+router.post('/create-roles', Auth.verifyToken, Auth.isAdmin, roles.create);
+router.post('/create-userroles', Auth.verifyToken, Auth.isAdmin, userRoles.create);
 
 module.exports = router;
