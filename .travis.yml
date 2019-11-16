@@ -30,7 +30,7 @@ addons:
 env:
   global:
     - PGPORT=5433
-    - DB_NAME=teamwork-test
+    - DB_NAME=teamworktest
     - DB_USER=teamwork
 before_script:
   - psql --command="CREATE USER ${DB_USER};"
