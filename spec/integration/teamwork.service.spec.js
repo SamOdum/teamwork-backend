@@ -9,7 +9,7 @@ const jsonHeader = { 'content-type': 'application/json' };
 frisby.globalSetup({
   request: {
     headers: {
-      'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTU3MzY1MzI1OSwiZXhwIjoxNTczOTk4ODU5fQ.zfZbCeye4OHHHNF5plD-KkOgnnxwGqRCIWJ5Z2C1Lys',
+      'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTU3MzkxMjc4OCwiZXhwIjoxNTc0MjU4Mzg4fQ.8YyR_ys9DY-1_EPisSv9SecX_elvZI97vPSs_aV1zhs',
       'Content-Type': 'application/json',
     },
   },
