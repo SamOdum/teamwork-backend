@@ -19,6 +19,7 @@ node_js:
 branches:
   only:
     - develop
+    - /^greenkeeper.*$/
 services:
   - postgresql
 addons:
@@ -36,7 +37,6 @@ before_script:
   - psql --command="CREATE USER ${DB_USER};"
   - psql --command="CREATE DATABASE ${DB_NAME} WITH OWNER = ${DB_USER};"
   - psql --dbname=$DB_NAME --file=sql/create-tables.sql
-    - /^greenkeeper/.*$/
 install:
   - npm install
 cache:
