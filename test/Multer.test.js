@@ -7,7 +7,7 @@ describe('multer', () => {
     done();
   });
 
-  it('should no throw an error', (done) => {
+  it('should not throw an error', (done) => {
     expect(multer).to.not.be.a('function');
     done();
   });

@@ -1,35 +1,165 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const { server } = require('../server');
+const faker = require('faker');
+// const db = require('../config/dbQuery');
+const {
+  chai,
+  chaiHttp,
+  // faker,
+  server,
+  // PORT,
+  tokenAuth,
+  tokenUnAuth,
+  hjson,
+  expect,
+  // sinonChai,
+  // BASE_URL,
+} = require('./setup');
+
 
 chai.use(chaiHttp);
+// chai.use(sinonChai);
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTU3MzkxMjc4OCwiZXhwIjoxNTc0MjU4Mzg4fQ.8YyR_ys9DY-1_EPisSv9SecX_elvZI97vPSs_aV1zhs';
-const hjson = 'application/json';
+describe('Employee test suit', () => {
+  describe('Creating a new user', () => {
+    it('it should reject a none logged-in user', (done) => {
+      chai.request(server)
+        .post('/api/v1/auth/create-user')
+        .set('Content-Type', hjson)
+        .then((res) => {
+          expect(res.status).to.equal(400);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('status');
+          expect(res).to.have.property('error');
+          done();
+        });
+    });
 
-describe('Employees', () => {
-  it('should be possible for admin to create accounts', (done) => {
-    chai.request(server)
-      .put('/api/v1/auth/sign-in')
-      .set('x-auth-token', token)
-      .set('Content-Type', hjson)
-      .send({
-        firstName: 'Penelope',
-        lastName: 'Okoro',
-        email: 'p.okoro@team.com',
-        password: 'Liepzig',
-        gender: 'female',
-        jobRole: 'operations manager',
-        department: 'Operations',
-        address: '22 Righthere Street, Calabar',
-        role: 'basic',
-      })
-      .then((res) => {
-        expect(res).to.have.status(201);
-      })
-      .catch((err) => {
-        throw err;
-      });
-    done();
+    it('it should reject a non-admin', (done) => {
+      chai.request(server)
+        .post('/api/v1/auth/create-user')
+        .set('x-auth-token', tokenUnAuth)
+        .set('Content-Type', hjson)
+        .then((res) => {
+          expect(res.status).to.equal(401);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('status');
+          expect(res).to.have.property('error');
+          done();
+        });
+    });
+
+    it('it should reject incomplete registration details', (done) => {
+      chai.request(server)
+        .post('/api/v1/auth/create-user')
+        .set('x-auth-token', tokenAuth)
+        .set('Content-Type', hjson)
+        .send({
+          firstname: faker.name.firstName(),
+          lastname: faker.name.lastName(),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+          jobrole: faker.name.jobTitle,
+          department: faker.name.jobType,
+          address: faker.address.streetAddress(),
+          role: 'basic',
+        })
+        .then((res) => {
+          expect(res.status).to.equal(400);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('status');
+          expect(res).to.have.property('error');
+          done();
+        });
+    });
+
+    it('it should accept complete registration details', (done) => {
+      const produceOne = (x, y) => {
+        const pick = Math.floor(Math.random() * 5);
+        return pick >= 3 ? x : y;
+      };
+      chai.request(server)
+        .post('/api/v1/auth/create-user')
+        .set('x-auth-token', tokenAuth)
+        .set('Content-Type', hjson)
+        .send({
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+          gender: produceOne('male', 'female'),
+          jobRole: faker.name.jobTitle(),
+          department: faker.name.jobType(),
+          address: faker.address.streetAddress(),
+          role: 'basic',
+        })
+        .then((res) => {
+          expect(res.status).to.equal(201);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('status');
+          expect(res.body).to.have.property('data');
+          done();
+        });
+    });
+  });
+
+  describe('Deleting a user', () => {
+    it('it should reject a none logged-in user', (done) => {
+      chai.request(server)
+        .delete('/api/v1/auth/delete-user')
+        .set('Content-Type', hjson)
+        .then((res) => {
+          expect(res.status).to.equal(400);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('status');
+          expect(res).to.have.property('error');
+          done();
+        });
+    });
+
+    it('it should reject a non-admin', (done) => {
+      chai.request(server)
+        .delete('/api/v1/auth/delete-user')
+        .set('x-auth-token', tokenUnAuth)
+        .set('Content-Type', hjson)
+        .then((res) => {
+          expect(res.status).to.equal(401);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('status');
+          expect(res).to.have.property('error');
+          done();
+        });
+    });
+
+    it('it should reject deletion if user not found', (done) => {
+      chai.request(server)
+        .delete('/api/v1/auth/delete-user')
+        .set('x-auth-token', tokenAuth)
+        .set('Content-Type', hjson)
+        .send({
+          userId: 1199984, // <=**SET RIDICULOUSLY HIGH NUMBE
+        })
+        .then((res) => {
+          expect(res.status).to.equal(404);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('status');
+          expect(res).to.have.property('error');
+          done();
+        });
+    });
+
+    it('it should delete existing employee record', (done) => {
+      chai.request(server)
+        .delete('/api/v1/auth/delete-user')
+        .set('x-auth-token', tokenAuth)
+        .set('Content-Type', hjson)
+        .send({
+          userId: 110, // <=** MAKE SURE IT'S VALID NUMBER
+        })
+        .then((res) => {
+          expect(res.status).to.equal(202);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('status');
+          done();
+        });
+    });
   });
 });

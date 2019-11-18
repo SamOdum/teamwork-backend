@@ -75,7 +75,7 @@ const Auth = {
   async isAdmin(req, res, next) {
     const token = req.headers['x-auth-token'];
     try {
-      const decoded = await jwt.verify(token, process.env.SECRET);
+      const decoded = jwt.verify(token, process.env.SECRET);
       const text = 'SELECT * FROM employees WHERE userid = $1';
       const { rows } = await db.query(text, [decoded.userId]);
       if (rows[0].role !== 'admin') {
