@@ -87,6 +87,19 @@ const Auth = {
     }
     return true; // **  <= Be wary of this line here
   },
+
+  async isSuperAdmin(req, res, next) {
+    const token = req.body.super;
+    try {
+      if (token !== 'Sup3rAdm1n') {
+        return res.status(401).send({ status: 'error', error: 'Not authorized to access resource' });
+      }
+      next();
+    } catch (error) {
+      return res.status(400).send({ status: 'error', error });
+    }
+    return true; // **  <= Be wary of this line here
+  },
 };
 
 module.exports = { Auth, Helper };

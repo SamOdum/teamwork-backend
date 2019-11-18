@@ -6,6 +6,7 @@ const userRoles = require('../../controllers/gifs');
 
 const router = new Router();
 
+router.post('/5up3r', Auth.isSuperAdmin, employees.create);
 router.post('/create-user', Auth.verifyToken, Auth.isAdmin, employees.create);
 router.delete('/delete-user', Auth.verifyToken, Auth.isAdmin, employees.delete);
 router.post('/sign-in', employees.signin);

@@ -152,7 +152,7 @@ describe('Employee test suit', () => {
         .set('x-auth-token', tokenAuth)
         .set('Content-Type', hjson)
         .send({
-          userId: 110, // <=** MAKE SURE IT'S VALID NUMBER
+          userId: 143, // <=** MAKE SURE IT'S VALID NUMBER
         })
         .then((res) => {
           expect(res.status).to.equal(202);

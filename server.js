@@ -1,12 +1,28 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
 
 // **Intialize express**
 const App = express();
 
 // **Initialize middleware**
 App.use(express.json({ extended: false }));
-App.use(cors());
+const isProduction = process.env.NODE_ENV === 'production';
+const origin = {
+  origin: isProduction ? 'https://www.example.com' : '*',
+};
+
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 1 minute
+  max: 20, // 5 requests,
+});
+
+App.use(limiter);
+App.use(cors(origin));
+App.use(compression());
+App.use(helmet());
 
 // **Routes**
 
