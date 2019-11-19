@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 
@@ -9,10 +9,10 @@ const App = express();
 
 // **Initialize middleware**
 App.use(express.json({ extended: false }));
-const isProduction = process.env.NODE_ENV === 'production';
-const origin = {
-  origin: isProduction ? 'https://www.example.com' : '*',
-};
+// const isProduction = process.env.NODE_ENV === 'production';
+// const origin = {
+//   origin: isProduction ? 'https://www.heroku.com' : '*',
+// };
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 1 minute
@@ -20,9 +20,9 @@ const limiter = rateLimit({
 });
 
 App.use(limiter);
-App.use(cors(origin));
+App.use(cors());
 App.use(compression());
-App.use(helmet());
+// App.use(helmet());
 
 // **Routes**
 

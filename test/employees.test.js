@@ -146,20 +146,20 @@ describe('Employee test suit', () => {
         });
     });
 
-    it('it should delete existing employee record', (done) => {
-      chai.request(server)
-        .delete('/api/v1/auth/delete-user')
-        .set('x-auth-token', tokenAuth)
-        .set('Content-Type', hjson)
-        .send({
-          userId: 143, // <=** MAKE SURE IT'S VALID NUMBER
-        })
-        .then((res) => {
-          expect(res.status).to.equal(202);
-          expect(res).to.be.an('object');
-          expect(res).to.have.property('status');
-          done();
-        });
-    });
+    // it('it should delete existing employee record', (done) => {
+    //   chai.request(server)
+    //     .delete('/api/v1/auth/delete-user')
+    //     .set('x-auth-token', tokenAuth)
+    //     .set('Content-Type', hjson)
+    //     .send({
+    //       userId: 143, // <=** MAKE SURE IT'S VALID NUMBER
+    //     })
+    //     .then((res) => {
+    //       expect(res.status).to.equal(202);
+    //       expect(res).to.be.an('object');
+    //       expect(res).to.have.property('status');
+    //       done();
+    //     });
+    // });
   });
 });

@@ -44,14 +44,14 @@ const Employees = {
     try {
       const find = await db.query(findQuery, [userId]);
       if (!find.rows[0]) {
-        return res.status(404).json({ status: 'error', message: 'Employee record not found' });
+        return res.status(404).json({ status: 'error', error: { message: 'Employee record not found' } });
       }
 
       db.query(deleteQuery, [userId]);
       // if (!rows[0]) {
       //   return res.status(404).json({ status: 'error', message: 'Employee record not found' });
       // }
-      return res.status(202).json({ status: 'success', data: { message: 'Article deleted' } });
+      return res.status(202).json({ status: 'success', data: { message: 'Employee deleted' } });
     } catch (error) {
       return res.status(400).send(error);
     }
@@ -66,16 +66,16 @@ const Employees = {
   async signin(req, res) {
     const { email, password } = req.body;
     if (!email || !password || (!Helper.isValidEmail(email))) {
-      return res.status(400).send({ status: 'error', message: 'Fill all fields and provide a valid email' });
+      return res.status(400).send({ status: 'error', error: { message: 'Fill all fields and provide a valid email' } });
     }
     const text = 'SELECT * FROM employees WHERE email = $1';
     try {
       const { rows } = await db.query(text, [email]);
       if (!rows[0]) {
-        return res.status(400).send({ status: 'error', message: 'The credentials you provided is incorrect' });
+        return res.status(400).send({ status: 'error', error: { message: 'The credentials you provided is incorrect' } });
       }
       if (!Helper.comparePassword(rows[0].password, password)) {
-        return res.status(400).send({ status: 'error', message: 'The credentials you provided is incorrect' });
+        return res.status(400).send({ status: 'error', error: { message: 'The credentials you provided is incorrect' } });
       }
       const token = Helper.generateToken(rows[0].userid);
       return res.status(200).send({ status: 'success', data: { token, userId: rows[0].userid } });
