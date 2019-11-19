@@ -5,7 +5,11 @@ const chaiHttp = require('chai-http');
 const faker = require('faker');
 const sinonChai = require('sinon-chai');
 const sinon = require('sinon');
+const dbQuery = require('../config/dbQuery');
+const multer = require('../middleware/Multer');
 const { server, PORT } = require('../server');
+const { Auth, Helper } = require('../middleware/Auth');
+
 
 const { assert, expect } = chai;
 
@@ -28,19 +32,23 @@ const afterEach = () => {
 
 
 module.exports = {
-  before,
+  assert,
+  Auth,
   afterEach,
+  BASE_URL,
+  before,
   chai,
   chaiHttp,
+  expect,
+  dbQuery,
   faker,
+  Helper,
+  multer,
   nock,
   server,
   sinon,
   sinonChai,
   PORT,
-  assert,
-  expect,
-  BASE_URL,
   tokenAuth,
   tokenUnAuth,
   hjson,

@@ -1,5 +1,7 @@
-const { expect } = require('chai');
-const multer = require('../middleware/Multer');
+const {
+  expect,
+  multer,
+} = require('../setup');
 
 describe('multer', () => {
   it('should return an object', (done) => {

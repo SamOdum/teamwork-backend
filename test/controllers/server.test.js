@@ -1,9 +1,12 @@
-const { expect } = require('chai');
-const { server, PORT } = require('../server');
+const {
+  server,
+  PORT,
+  expect,
+} = require('../setup');
 
 describe('server', () => {
   it('should be an object', (done) => {
-    expect(server).to.be.a('object');
+    expect(server).to.be.an('object');
     done();
   });
 });

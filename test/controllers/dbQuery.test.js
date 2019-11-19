@@ -1,5 +1,7 @@
-const { expect } = require('chai');
-const dbQuery = require('../config/dbQuery');
+const {
+  dbQuery,
+  expect,
+} = require('../setup');
 
 describe('DbQuery', () => {
   it('should be an object', (done) => {

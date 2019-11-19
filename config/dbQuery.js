@@ -1,39 +1,38 @@
-// src/usingDB/models/index.js
 const { Pool } = require('pg');
 const dotenv = require('dotenv');
 
 dotenv.config();
 
-const isProduction = process.env.NODE_ENV === 'production';
 const {
   DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE,
 } = process.env;
 
 const connectionString = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
 
-const pool = new Pool({
-  connectionString: isProduction ? process.env.DATABASE_URL : connectionString,
-});
-
+let pool;
+if (process.env.NODE_ENV === 'production') {
+  // On production server using heroku db connection string
+  pool = new Pool({ connectionString: process.env.DATABASE_URL });
+} else if (process.env.NODE_ENV === 'test') {
+  pool = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
+} else {
+  // created a Pool using local env default config on local
+  pool = new Pool({ connectionString });
+}
 
 const dbQuery = {
-  /**
-   * DB Query
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} object
-   */
-  query(text, params) {
-    return new Promise((resolve, reject) => {
-      pool
-        .query(text, params)
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+  query: async (text, params) => {
+    const client = await pool.connect();
+    try {
+      const res = await client.query(text, params);
+      return res;
+    } finally {
+      client.release();
+    }
+  },
+  clearDb: async () => {
+    const client = await pool.connect();
+    await client.query('DROP TABLE IF EXISTS users CASCADE');
   },
 };
 

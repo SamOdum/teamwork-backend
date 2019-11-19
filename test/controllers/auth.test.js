@@ -1,9 +1,12 @@
-const { expect } = require('chai');
-const { Auth, Helper } = require('../middleware/Auth');
+const {
+  expect,
+  Auth,
+  Helper,
+} = require('../setup');
 
 describe('Auth', () => {
   it('should return an object', (done) => {
-    expect(Auth).to.be.a('object');
+    expect(Auth).to.be.an('object');
     done();
   });
 

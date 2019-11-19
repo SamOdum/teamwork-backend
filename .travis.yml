@@ -33,6 +33,7 @@ env:
     - PGPORT=5433
     - DB_NAME=teamworktest
     - DB_USER=teamwork
+    - DB_PASSWORD=teamwork
 before_script:
   - psql --command="CREATE USER ${DB_USER};"
   - psql --command="CREATE DATABASE ${DB_NAME} WITH OWNER = ${DB_USER};"

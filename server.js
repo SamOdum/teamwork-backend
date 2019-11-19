@@ -32,7 +32,7 @@ App.use('/api', require('./routes/routes'));
 // App.post('/api/v1/auth/create-roles', require('./controllers/employees').create);
 
 App.get('/', (req, res) => {
-  res.status(200).json({ status: 'success', data: { info: 'Server up and running smoothly' } });
+  res.status(200).json({ message: 'Welcome to Teamwork API.' });
 });
 
 // **Initialize port & server**

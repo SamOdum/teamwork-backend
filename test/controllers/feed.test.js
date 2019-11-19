@@ -1,16 +1,16 @@
 const {
-  BASE_URL,
+  // BASE_URL,
   chai,
   chaiHttp,
-  nock,
+  // nock,
   server,
-  sinon,
+  // sinon,
   tokenAuth,
   hjson,
   assert,
   expect,
-} = require('./setup');
-const Feed = require('../controllers/feed');
+} = require('../setup');
+const Feed = require('../../controllers/feed');
 
 chai.use(chaiHttp);
 

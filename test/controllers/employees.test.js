@@ -1,9 +1,8 @@
-const faker = require('faker');
 // const db = require('../config/dbQuery');
 const {
   chai,
   chaiHttp,
-  // faker,
+  faker,
   server,
   // PORT,
   tokenAuth,
@@ -12,7 +11,7 @@ const {
   expect,
   // sinonChai,
   // BASE_URL,
-} = require('./setup');
+} = require('../setup');
 
 
 chai.use(chaiHttp);
@@ -152,7 +151,7 @@ describe('Employee test suit', () => {
     //     .set('x-auth-token', tokenAuth)
     //     .set('Content-Type', hjson)
     //     .send({
-    //       userId: 143, // <=** MAKE SURE IT'S VALID NUMBER
+    //       userId: 1, // <=** MAKE SURE IT'S VALID NUMBER
     //     })
     //     .then((res) => {
     //       expect(res.status).to.equal(202);
