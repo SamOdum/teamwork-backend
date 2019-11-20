@@ -5,9 +5,7 @@ dotenv.config();
 
 const Feeds = {
   /**
-     *
  * Create PostgreSQL Query
-     *
      */
   query: {
     getArticlesAndGifs: 'SELECT * FROM articles UNION ALL SELECT * FROM gifs ORDER BY createdon DESC',
