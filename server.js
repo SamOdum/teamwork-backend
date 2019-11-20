@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-// const helmet = require('helmet');
+const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 
@@ -9,27 +9,23 @@ const App = express();
 
 // **Initialize middleware**
 App.use(express.json({ extended: false }));
-// const isProduction = process.env.NODE_ENV === 'production';
-// const origin = {
-//   origin: isProduction ? 'https://www.heroku.com' : '*',
-// };
+const isProduction = process.env.NODE_ENV === 'production';
+const origin = {
+  origin: isProduction ? 'https://www.heroku.com' : '*', // < ** UPDATE THIS LINE WHEN FRONTEND URL READY
+};
 
 const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 1 minute
-  max: 20, // 5 requests,
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 20, // 20 requests,
 });
 
 App.use(limiter);
-App.use(cors());
+App.use(cors(origin));
 App.use(compression());
-// App.use(helmet());
+App.use(helmet());
 
-// **Routes**
-
+// **Routes*
 App.use('/api', require('./routes/routes'));
-// App.post('/api/v1/auth/create-user', require('./controllers/employees').create);
-// App.post('/api/v1/auth/create-roles', require('./controllers/employees').create);
-// App.post('/api/v1/auth/create-roles', require('./controllers/employees').create);
 
 App.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to Teamwork API.' });
