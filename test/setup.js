@@ -1,5 +1,3 @@
-
-const nock = require('nock');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
@@ -19,24 +17,11 @@ const tokenAuth = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6
 const tokenUnAuth = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsImlhdCI6MTU3NDA2MjgwMSwiZXhwIjoxNTc0NDA4NDAxfQ.wAoNg6qcdN7HzMt_qINwUYVLf8BhnBtRIj9wJAlGNxs';
 const hjson = 'application/json';
 
-let authStub;
-
-const before = () => {
-  authStub = sinon.stub(server, 'isAuthenticated').callsFake((req, res, next) => next());
-};
-
-const afterEach = () => {
-  nock.cleanAll();
-  authStub.restore();
-};
-
 
 module.exports = {
   assert,
   Auth,
-  afterEach,
   BASE_URL,
-  before,
   chai,
   chaiHttp,
   expect,
@@ -44,7 +29,6 @@ module.exports = {
   faker,
   Helper,
   multer,
-  nock,
   server,
   sinon,
   sinonChai,
