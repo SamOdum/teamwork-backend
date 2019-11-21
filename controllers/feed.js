@@ -5,9 +5,7 @@ dotenv.config();
 
 const Feeds = {
   /**
-     *
  * Create PostgreSQL Query
-     *
      */
   query: {
     getArticlesAndGifs: 'SELECT * FROM articles UNION ALL SELECT * FROM gifs ORDER BY createdon DESC',
@@ -20,10 +18,13 @@ const Feeds = {
    * @returns {object} feed object
    */
   layout(rows, x) {
-    return {
-      id: rows[x].articleid, createdOn: rows[x].createdon, title: rows[x].title, 'article/url': rows[x].article, authorId: rows[x].userid,
-    };
+    if (rows[x]) {
+      return {
+        id: rows[x].articleid, createdOn: rows[x].createdon, title: rows[x].title, 'article/url': rows[x].article, authorId: rows[x].userid,
+      };
+    }
   },
+
   /**
    * Get All Articles & Gifs
    * @param {object} req
@@ -35,7 +36,7 @@ const Feeds = {
     try {
       const { rows } = await db.query(getFeeds);
       if (!rows) {
-        return res.status(404).send({ status: 'error', message: 'Gif not found' });
+        return res.status(404).send({ status: 'error', message: 'Nothing has been posted yet' });
       }
       return res.status(200).json({
         status: 'success',

@@ -1,7 +1,10 @@
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 const db = require('../config/dbQuery');
+
+dotenv.config();
 
 
 const Helper = {
@@ -89,10 +92,11 @@ const Auth = {
   },
 
   async isSuperAdmin(req, res, next) {
-    const token = req.body.super;
+    const { superCode } = req.body;
+    const { SUPERCODE } = process.env;
     try {
-      if (token !== 'Sup3rAdm1n') {
-        return res.status(401).send({ status: 'error', error: 'Not authorized to access resource' });
+      if (superCode !== SUPERCODE) {
+        return res.status(403).send({ status: 'error', error: 'Not authorized to access resource' });
       }
       next();
     } catch (error) {

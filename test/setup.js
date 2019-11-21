@@ -1,5 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const fs = require('fs');
+const path = require('path');
 const faker = require('faker');
 const sinonChai = require('sinon-chai');
 const sinon = require('sinon');
@@ -13,8 +15,8 @@ const { assert, expect } = chai;
 
 const BASE_URL = `http://localhost:${PORT}`;
 
-const tokenAuth = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTU3NDA2MjQ5MywiZXhwIjoxNTc0NDA4MDkzfQ.2cG4uwUypJuCygHAl75knMDw8flO1eMWzErWWrOmRh4';
-const tokenUnAuth = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsImlhdCI6MTU3NDA2MjgwMSwiZXhwIjoxNTc0NDA4NDAxfQ.wAoNg6qcdN7HzMt_qINwUYVLf8BhnBtRIj9wJAlGNxs';
+const tokenAuth = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTU3NDMyMTY2NiwiZXhwIjoxNTc0NjY3MjY2fQ.bDIxiQrT5npZ7sdfRYFTX44yM2VjrZEJvjWsvuz-OnE';
+const tokenUnAuth = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTU3NDMyNzI3NiwiZXhwIjoxNTc0NjcyODc2fQ.qZ1ogzAKI9ijogNKFX98TDYtkoBJ73Wd5__EGQRwbm8';
 const hjson = 'application/json';
 
 
@@ -27,11 +29,13 @@ module.exports = {
   expect,
   dbQuery,
   faker,
+  fs,
   Helper,
   multer,
   server,
   sinon,
   sinonChai,
+  path,
   PORT,
   tokenAuth,
   tokenUnAuth,

@@ -1,0 +1,23 @@
+{
+  "add": {
+    "success": {
+      "res": {
+        "statusCode": 201,
+        "headers": {
+          "content-type": "application/json",
+          "x-auth-token": "1212"
+        }
+      },
+      "body": {
+        "status": "success",
+        "data": [
+          {
+            "message": "User account successfully created",
+            "token": 12345,
+            "userId": 1
+          }
+        ]
+      }
+    }
+  }
+}
