@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/SamOdum/teamwork-backend.svg?branch=develop)](https://travis-ci.org/SamOdum/teamwork-backend)
 [![Maintainability](https://api.codeclimate.com/v1/badges/f705813f749afd9bdc5b/maintainability)](https://codeclimate.com/github/SamOdum/teamwork-backend/maintainability)
 [![Coverage Status](https://coveralls.io/repos/github/SamOdum/teamwork-backend/badge.svg?branch=develop)](https://coveralls.io/github/SamOdum/teamwork-backend?branch=develop) [![Greenkeeper badge](https://badges.greenkeeper.io/SamOdum/teamwork-backend.svg)](https://greenkeeper.io/)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/f705813f749afd9bdc5b/test_coverage)](https://codeclimate.com/github/SamOdum/teamwork-backend/test_coverage)
 
 ## Project Overview
 
