@@ -13,7 +13,7 @@ const connectionString = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB
 
 const pool = new Pool({
   connectionString: isProduction ? process.env.DATABASE_URL : connectionString,
-  ssl: true,
+  ssl: isProduction,
 });
 
 const dbQuery = {

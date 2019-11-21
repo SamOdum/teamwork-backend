@@ -16,6 +16,8 @@ const Employees = {
     createQuery: `INSERT INTO
   employees(firstname, lastname, email, password, gender, jobrole, department, address, role, url, publicid)
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) returning *`,
+    findUser: 'SELECT * FROM employees WHERE userid = $1',
+    deleteUser: 'DELETE FROM employees WHERE userid = $1 returning *',
   },
   /**
    * Create An Employee
@@ -23,7 +25,7 @@ const Employees = {
    * @param {object} res
    * @returns {object} employee object
    */
-  async create(req, res) {
+  async createBare(req, res) {
     const text = `INSERT INTO
       employees(firstname, lastname, email, password, gender, jobrole, department, address, role)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *`;
@@ -51,7 +53,7 @@ const Employees = {
    * @param {object} res
    * @returns {object} employee object
    */
-  async createFull(req, res) {
+  async create(req, res) {
     const file = req.files[0].path;
 
     // **Upload file to Cloudinary then database
@@ -80,7 +82,7 @@ const Employees = {
    * @param {object} res
    * @returns {void} return status code 204
    */
-  async delete(req, res) {
+  async deleteBare(req, res) {
     const { userId } = req.body;
     const deleteQuery = 'DELETE FROM employees WHERE userid=$1';
     const findQuery = 'SELECT * FROM employees WHERE userid=$1';
@@ -97,6 +99,32 @@ const Employees = {
       return res.status(202).json({ status: 'success', data: { message: 'Employee deleted' } });
     } catch (error) {
       return res.status(400).send(error);
+    }
+  },
+
+  /**
+   * Delete An Employee
+   * @param {object} req
+   * @param {object} res
+   * @returns {void} return status code 204
+   */
+  async delete(req, res) {
+    const userId = req.body.userUniqueId;
+    const findQuery = Employees.query.findUser;
+    const deleteQuery = Employees.query.deleteUser;
+    try {
+      const { rows } = await db.query(findQuery, [userId]);
+      if (!rows[0]) {
+        return res.status(404).send({ status: 'error', error: { message: 'User not found' } });
+      }
+      cloudinary.uploader.destroy(rows[0].publicid);
+      const response = await db.query(deleteQuery, [userId]);
+      if (!response.rows[0]) {
+        return res.status(404).json({ status: 'error', error: { message: 'Employee not found' } });
+      }
+      return res.status(202).json({ status: 'success', data: { message: 'User successfully deleted' } });
+    } catch (error) {
+      return res.status(400).send({ status: 'error', error });
     }
   },
 

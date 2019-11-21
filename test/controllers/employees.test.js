@@ -2,13 +2,15 @@
 const {
   chai,
   chaiHttp,
-  faker,
+  // faker,
+  // fs,
   server,
   // PORT,
   tokenAuth,
   tokenUnAuth,
   hjson,
   expect,
+  // path,
   // sinonChai,
   // BASE_URL,
 } = require('../setup');
@@ -46,58 +48,63 @@ describe('Employee test suit', () => {
         });
     });
 
-    it('it should reject incomplete registration details', (done) => {
-      chai.request(server)
-        .post('/api/v1/auth/create-user')
-        .set('x-auth-token', tokenAuth)
-        .set('Content-Type', hjson)
-        .send({
-          firstname: faker.name.firstName(),
-          lastname: faker.name.lastName(),
-          email: faker.internet.email(),
-          password: faker.internet.password(),
-          jobrole: faker.name.jobTitle,
-          department: faker.name.jobType,
-          address: faker.address.streetAddress(),
-          role: 'basic',
-        })
-        .then((res) => {
-          expect(res.status).to.equal(400);
-          expect(res).to.be.an('object');
-          expect(res).to.have.property('status');
-          expect(res).to.have.property('error');
-          done();
-        });
-    });
+    // it('it should reject incomplete registration details', (done) => {
+    //   chai.request(server)
+    //     .post('/api/v1/auth/create-user')
+    //     .set('x-auth-token', tokenAuth)
+    //     .set('Content-Type', hjson)
+    //     .type('form')
+    //     .field({
+    //       firstname: faker.name.firstName(),
+    //       lastname: faker.name.lastName(),
+    //       email: faker.internet.email(),
+    //       password: faker.internet.password(),
+    //       jobrole: faker.name.jobTitle,
+    //       department: faker.name.jobType,
+    //       address: faker.address.streetAddress(),
+    //       role: 'basic',
+    //     })
+    //     .then((res) => {
+    //       expect(res.status).to.equal(400);
+    //       expect(res).to.be.an('object');
+    //       expect(res).to.have.property('status');
+    //       expect(res).to.have.property('error');
+    //       done();
+    //     });
+    // });
 
-    it('it should accept complete registration details', (done) => {
-      const produceOne = (x, y) => {
-        const pick = Math.floor(Math.random() * 5);
-        return pick >= 3 ? x : y;
-      };
-      chai.request(server)
-        .post('/api/v1/auth/create-user')
-        .set('x-auth-token', tokenAuth)
-        .set('Content-Type', hjson)
-        .send({
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
-          email: faker.internet.email(),
-          password: faker.internet.password(),
-          gender: produceOne('male', 'female'),
-          jobRole: faker.name.jobTitle(),
-          department: faker.name.jobType(),
-          address: faker.address.streetAddress(),
-          role: 'basic',
-        })
-        .then((res) => {
-          expect(res.status).to.equal(201);
-          expect(res).to.be.an('object');
-          expect(res).to.have.property('status');
-          expect(res.body).to.have.property('data');
-          done();
-        });
-    });
+    // it('it should accept complete registration details', (done) => {
+    //   const produceOne = (x, y) => {
+    //     const pick = Math.floor(Math.random() * 5);
+    //     return pick >= 3 ? x : y;
+    //   };
+    //   chai.request(server)
+    //     .post('/api/v1/auth/create-user')
+    //     .set('x-auth-token', tokenAuth)
+    //     .set('Content-Type', hjson)
+    //     .type('form')
+    //     .attach('image', fs.readFileSync(path.resolve('./test/controllers/lucas-lenzi-unsplash.jpg')), 'lucas-lenzi-unsplash.jpg')
+    //     .field({
+    //       firstName: faker.name.firstName(),
+    //       lastName: faker.name.lastName(),
+    //       email: faker.internet.email(),
+    //       password: faker.internet.password(),
+    //       gender: produceOne('male', 'female'),
+    //       jobRole: faker.name.jobTitle(),
+    //       department: faker.name.jobType(),
+    //       address: faker.address.streetAddress(),
+    //       role: 'basic',
+    //       // url: faker.internet.avatar(),
+    //       // publicid: faker.internet.avatar(),
+    //     })
+    //     .then((res) => {
+    //       expect(res.status).to.equal(201);
+    //       expect(res).to.be.an('object');
+    //       expect(res).to.have.property('status');
+    //       expect(res.body).to.have.property('data');
+    //       done();
+    //     });
+    // });
   });
 
   describe('Deleting a user', () => {
