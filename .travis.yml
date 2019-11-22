@@ -37,23 +37,13 @@ env:
     - DB_NAME=teamworktest
     - DB_USER=teamwork
     - DB_PASSWORD=teamwork
-    - CC_TEST_REPORTER_ID=cf994e96c6fea93f3341419d232578eb321ca5a055f008ab15fd617230edb858
 before_script:
   - psql --command="CREATE USER ${DB_USER};"
   - psql --command="CREATE DATABASE ${DB_NAME} WITH OWNER = ${DB_USER};"
   - psql --dbname=$DB_NAME --file=sql/create-tables.sql
-  - yarn global add nyc
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
 install:
   - npm install
 cache:
   directories:
     - 'node_modules'
-script:
-  - nyc --reporter=lcov yarn run unit
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-notifications:
-  email: false
 after_success: npm run coverage
