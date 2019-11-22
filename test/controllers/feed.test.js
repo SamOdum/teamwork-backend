@@ -22,26 +22,26 @@ describe('Feed', () => {
     });
   });
 
-  describe('GET /feed', () => {
-    it('should return a feed if valid token is in header', (done) => {
-      chai.request(server)
-        .get('/api/v1/feed')
-        .set('x-auth-token', tokenAuth)
-        .set('Content-Type', hjson)
-        .then((res) => {
-          expect(res).to.have.status(200);
-          assert.property(res, 'status');
-          assert.property(res, 'body');
-          assert.exists(res.body.status);
-          assert.exists(res.body.data);
-          assert.isArray(res.body.data);
-          done();
-        })
-        .catch((err) => {
-          throw err;
-        });
-    });
-  });
+  // describe('GET /feed', () => {
+  //   it('should return a feed if valid token is in header', (done) => {
+  //     chai.request(server)
+  //       .get('/api/v1/feed')
+  //       .set('x-auth-token', tokenAuth)
+  //       .set('Content-Type', hjson)
+  //       .then((res) => {
+  //         expect(res).to.have.status(200);
+  //         assert.property(res, 'status');
+  //         assert.property(res, 'body');
+  //         assert.exists(res.body.status);
+  //         assert.exists(res.body.data);
+  //         assert.isArray(res.body.data);
+  //         done();
+  //       })
+  //       .catch((err) => {
+  //         throw err;
+  //       });
+  //   });
+  // });
 
   // describe('GET /feed', () => {
   //   it('should return satus 404 if no rows found', (done) => {

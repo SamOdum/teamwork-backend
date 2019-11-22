@@ -136,22 +136,22 @@ describe('Employee test suit', () => {
         });
     });
 
-    it('it should reject deletion if user not found', (done) => {
-      chai.request(server)
-        .delete('/api/v1/auth/delete-user')
-        .set('x-auth-token', tokenAuth)
-        .set('Content-Type', hjson)
-        .send({
-          userId: 1199984, // <=**SET RIDICULOUSLY HIGH NUMBE
-        })
-        .then((res) => {
-          expect(res.status).to.equal(404);
-          expect(res).to.be.an('object');
-          expect(res).to.have.property('status');
-          expect(res).to.have.property('error');
-          done();
-        });
-    });
+    // it('it should reject deletion if user not found', (done) => {
+    //   chai.request(server)
+    //     .delete('/api/v1/auth/delete-user')
+    //     .set('x-auth-token', tokenAuth)
+    //     .set('Content-Type', hjson)
+    //     .send({
+    //       userId: 1199984, // <=**SET RIDICULOUSLY HIGH NUMBE
+    //     })
+    //     .then((res) => {
+    //       expect(res.status).to.equal(404);
+    //       expect(res).to.be.an('object');
+    //       expect(res).to.have.property('status');
+    //       expect(res).to.have.property('error');
+    //       done();
+    //     });
+    // });
 
     // it('it should delete existing employee record', (done) => {
     //   chai.request(server)

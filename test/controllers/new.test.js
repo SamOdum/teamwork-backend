@@ -35,6 +35,30 @@ describe('Employees', () => {
     });
 
     describe('POST /api/v1/create-user', () => {
+      it('should reject incomplete registration details', (done) => {
+        const options = {
+          body: {
+            // message: 'User account successfully created',
+            // token: 12345,
+            // userId: 1,
+          },
+          json: true,
+          url: `${base}/api/v1/create-user`,
+        };
+        const obj = employee.create.error;
+        this.post.yields(null, obj.res, JSON.stringify(obj.body));
+        request.post(options, (err, res, body) => {
+          res.statusCode.should.equal(400);
+          res.headers['content-type'].should.contain('application/json');
+          body = JSON.parse(body);
+          body.status.should.eql('error');
+          body.error.should.eql('incomplete registration details');
+          done();
+        });
+      });
+    });
+
+    describe('POST /api/v1/create-user', () => {
       it('should return the new user that was added', (done) => {
         const options = {
           body: {
@@ -45,17 +69,17 @@ describe('Employees', () => {
           json: true,
           url: `${base}/api/v1/create-user`,
         };
-        const obj = employee.add.success;
+        const obj = employee.create.success;
         this.post.yields(null, obj.res, JSON.stringify(obj.body));
         request.post(options, (err, res, body) => {
           res.statusCode.should.equal(201);
           res.headers['content-type'].should.contain('application/json');
-          //   body = JSON.parse(body);
-          //   body.status.should.eql('success');
-          //   body.data[0].should.include.keys(
-          //     'message', 'token', 'userId',
-          //   );
-          //   body.data[0].token.should.eql(12345);
+          body = JSON.parse(body);
+          body.status.should.eql('success');
+          body.data[0].should.include.keys(
+            'message', 'token', 'userId',
+          );
+          body.data[0].token.should.eql(12345);
           done();
         });
       });
