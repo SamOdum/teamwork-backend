@@ -77,13 +77,14 @@ describe('Employee test suit', () => {
     //   const produceOne = (x, y) => {
     //     const pick = Math.floor(Math.random() * 5);
     //     return pick >= 3 ? x : y;
+    //   const fileDir = './test/controllers/lucas-lenzi-unsplash.jpg'
     //   };
     //   chai.request(server)
     //     .post('/api/v1/auth/create-user')
     //     .set('x-auth-token', tokenAuth)
     //     .set('Content-Type', hjson)
     //     .type('form')
-    //     .attach('image', fs.readFileSync(path.resolve('./test/controllers/lucas-lenzi-unsplash.jpg')), 'lucas-lenzi-unsplash.jpg')
+    //     .attach('image', fs.readFileSync(path.resolve(fileDir)), 'lucas-lenzi-unsplash.jpg')
     //     .field({
     //       firstName: faker.name.firstName(),
     //       lastName: faker.name.lastName(),

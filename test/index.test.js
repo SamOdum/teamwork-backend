@@ -5,4 +5,4 @@ require('./controllers/employees.test');
 require('./controllers/feed.test');
 require('./controllers/multer.test');
 require('./controllers/server.test');
-// require('./controllers/new.test');
+require('./controllers/new.test');
